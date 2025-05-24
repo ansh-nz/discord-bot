@@ -22,7 +22,11 @@ const client = new Client({
 });
 
 // Read all quotes from the file
-const urges = fs.readFileSync("urge_quotes.txt", "utf8").split("\n").filter(Boolean);
+// Read paragraphs between triple brackets
+const urgesRaw = fs.readFileSync("urge_quotes.txt", "utf8");
+const urges = urgesRaw.split(/\[\[\[(.*?)\]\]\]/gs)
+                      .map(text => text.trim())
+                      .filter(Boolean);
 
 client.on("messageCreate", async message => {
   if (message.content === ".urge") {
